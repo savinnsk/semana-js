@@ -6,18 +6,15 @@ const cardListWorker = new Worker("./src/workers/cardListWorker.js", {
   type: "module",
 });
 
-cardListWorker.onmessage = (msg) => {
-  console.log("main process", msg);
-};
-
-cardListWorker.postMessage("here!");
 const [rootPath] = window.location.href.split("/pages/");
 const factory = {
   async initalize() {
     return CardsController.initialize({
-      worker: cardListWorker,
       view: new CardsView(),
-      service: new CardsService({ dbUrl: `${rootPath}/assets/database.json` }),
+      service: new CardsService({
+        dbUrl: `${rootPath}/assets/database.json`,
+        cardListWorker,
+      }),
     });
   },
 };
