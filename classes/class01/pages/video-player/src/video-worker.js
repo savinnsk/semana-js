@@ -9,14 +9,23 @@ import "https://unpkg.com/@tensorflow-models/face-landmarks-detection@0.0.1/dist
 
 import VideoService from "./video-service.js";
 
-//debugger;
 //worker uses self to search what is injected in html instead use window
 const { tf, faceLandmarksDetection } = self;
+
 tf.setBackend("webgl");
 
 const service = new VideoService({
   faceLandmarksDetection,
 });
+
+console.log("loading tf model");
+
+await service.loadModel();
+
+console.log("tf model loaded");
+
+postMessage("READY");
+
 onmessage = ({ data }) => {
   console.log("worker", data);
 

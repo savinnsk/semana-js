@@ -10,7 +10,7 @@ async function getWorker() {
     console.log("supports");
     //using src due to, it'll be injected in index reference
     const worker = new Worker("./src/video-worker.js", { type: "module" });
-    return;
+    return worker;
   }
 
   const workerMock = {
@@ -31,6 +31,7 @@ const [rootPath] = window.location.href.split("/pages/");
 const VideoFactory = {
   async initialize() {
     return VideoController.initialize({
+      worker,
       view: new VideoView({}),
       service: new VideoService({}),
     });

@@ -1,9 +1,11 @@
 export default class VideoController {
   #videoView;
+  #videoWorker;
   #videoService;
-  constructor({ view, service }) {
+  constructor({ view, service, worker }) {
     this.#videoView = view;
     this.#videoService = service;
+    this.#videoWorker = this.#configureWorker(worker);
 
     //bind to referer a controller
     this.#videoView.configureOnBtnClick(this.onBtnStart.bind(this));
@@ -15,6 +17,13 @@ export default class VideoController {
     return controller.init();
   }
 
+  #configureWorker(worker) {
+    worker.onmessage = (msg) => {
+      console.log("receive", msg);
+    };
+
+    return worker;
+  }
   async init() {
     console.log("init");
   }
