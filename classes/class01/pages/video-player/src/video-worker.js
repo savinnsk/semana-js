@@ -26,8 +26,11 @@ console.log("tf model loaded");
 
 postMessage("READY");
 
-onmessage = ({ data }) => {
-  console.log("worker", data);
+onmessage = async ({ data: video }) => {
+  const blinked = await service.handBlinked(video);
+
+  if (!blinked) return;
+  postMessage({ blinked });
 
   postMessage({
     ok: "ok",
