@@ -31,9 +31,9 @@ const [rootPath] = window.location.href.split("/pages/");
 const VideoFactory = {
   async initialize() {
     return VideoController.initialize({
-      worker,
       view: new VideoView({}),
       service: new VideoService({}),
+      worker: worker,
     });
   },
 };

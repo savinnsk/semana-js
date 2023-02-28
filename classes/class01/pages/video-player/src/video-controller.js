@@ -19,6 +19,10 @@ export default class VideoController {
 
   #configureWorker(worker) {
     worker.onmessage = (msg) => {
+      if ("READY" === msg.data) {
+        this.#videoView.enableButton();
+        return;
+      }
       console.log("receive", msg);
     };
 

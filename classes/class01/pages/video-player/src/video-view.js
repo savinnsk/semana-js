@@ -2,10 +2,8 @@ export default class VideoView {
   #btnInit = document.querySelector("#init");
   #statusElement = document.querySelector("#status");
 
-  constructor({}) {}
-
   enableButton() {
-    this.#btnInit.disable = false;
+    this.#btnInit.disabled = false;
   }
 
   configureOnBtnClick(fn) {
