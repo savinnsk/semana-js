@@ -9,7 +9,7 @@ async function getWorker() {
   if (supportWorkerType()) {
     console.log("supports");
     //using src due to, it'll be injected in index reference
-    const worker = new Worker("./src/video-worker.js");
+    const worker = new Worker("./src/video-worker.js", { type: "module" });
     return;
   }
 
