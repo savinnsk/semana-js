@@ -1,11 +1,13 @@
 export default class VideoController {
   #videoView;
+  #camera;
   #videoWorker;
-  #videoService;
-  constructor({ view, service, worker }) {
+  #blinkCounter = 0;
+  constructor({ view, worker, camera }) {
     this.#videoView = view;
-    this.#videoService = service;
+
     this.#videoWorker = this.#configureWorker(worker);
+    this.#camera = camera;
 
     //bind to referer a controller
     this.#videoView.configureOnBtnClick(this.onBtnStart.bind(this));
@@ -18,18 +20,39 @@ export default class VideoController {
   }
 
   #configureWorker(worker) {
-    worker.onmessage = (msg) => {
-      if ("READY" === msg.data) {
+    let ready = false;
+    worker.onmessage = ({ data }) => {
+      if ("READY" === data) {
+        console.log("work is ready");
         this.#videoView.enableButton();
+        ready = true;
         return;
       }
-      console.log("receive", msg);
+
+      const blinked = data.blinked;
+      this.#blinkCounter += blinked;
+      console.log("blinked", blinked);
     };
 
-    return worker;
+    return {
+      send(msg) {
+        if (!ready) return;
+        worker.postMessage(msg);
+      },
+    };
   }
+
   async init() {
     console.log("init");
+  }
+
+  loop() {
+    const video = this.#camera.video;
+    const img = this.#videoView.getVideoFrame(video);
+    this.#videoWorker.send(img);
+    this.log("detecting eye blink...");
+
+    setTimeout(() => this.loop, 100);
   }
 
   log(text) {
@@ -38,5 +61,7 @@ export default class VideoController {
 
   onBtnStart() {
     this.log("initializing detection");
+    this.#blinkCounter = 0;
+    this.log();
   }
 }

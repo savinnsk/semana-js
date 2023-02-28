@@ -31,8 +31,4 @@ onmessage = async ({ data: video }) => {
 
   if (!blinked) return;
   postMessage({ blinked });
-
-  postMessage({
-    ok: "ok",
-  });
 };

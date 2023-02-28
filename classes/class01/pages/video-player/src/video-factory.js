@@ -32,8 +32,8 @@ const VideoFactory = {
   async initialize() {
     return VideoController.initialize({
       view: new VideoView({}),
-      service: new VideoService({}),
-      worker: worker,
+      camera,
+      worker,
     });
   },
 };
